@@ -1,5 +1,3 @@
-require 'pp'
-
 class Conway
   attr_accessor :board
 
