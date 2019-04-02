@@ -2,8 +2,7 @@ class Conway
   attr_accessor :board
 
   def initialize(size)
-    @board = (0..size)
-      .map { |r| (0..size).map { |c| rand(0..1) == 1 } }
+    @board = Array.new(size) { Array.new(size) { rand(0..1) == 1 } }
   end
 
   def tick
@@ -12,7 +11,7 @@ class Conway
         num_neighbors = live_neighbors(row_i, col_i)
 
         if cell
-          num_neighbors == 2 || num_neighbors == 3
+          [2, 3].include?(num_neighbors)
         else
           num_neighbors == 3
         end
