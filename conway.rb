@@ -6,7 +6,7 @@ class Conway
   end
 
   def tick
-    @board = @board.map.with_index do |row, row_i|
+    @board = board.map.with_index do |row, row_i|
       row.map.with_index do |cell, col_i|
         num_neighbors = live_neighbors(row_i, col_i)
 
