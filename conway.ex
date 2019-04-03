@@ -32,18 +32,18 @@ defmodule Conway do
 
   defp live_neighbors(board, row, col) do
     Enum.count([
-      get_val(board, row, col + 1),
-      get_val(board, row, col - 1),
-      get_val(board, row + 1, col),
-      get_val(board, row - 1, col),
-      get_val(board, row + 1, col + 1),
-      get_val(board, row - 1, col - 1),
-      get_val(board, row + 1, col - 1),
-      get_val(board, row - 1, col + 1),
+      dig_val(board, row + 0, col + 1),
+      dig_val(board, row + 0, col - 1),
+      dig_val(board, row + 1, col + 0),
+      dig_val(board, row - 1, col + 0),
+      dig_val(board, row + 1, col + 1),
+      dig_val(board, row - 1, col - 1),
+      dig_val(board, row + 1, col - 1),
+      dig_val(board, row - 1, col + 1),
     ], &(&1))
   end
 
-  defp get_val(board, row, col) do
+  defp dig_val(board, row, col) do
     row = rem(row, length(board))
     col = rem(col, length(board))
 

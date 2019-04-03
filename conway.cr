@@ -8,13 +8,7 @@ class Conway
   def tick
     @board = board.map_with_index do |row, row_i|
       row.map_with_index do |cell, col_i|
-        num_neighbors = live_neighbors(row_i, col_i)
-
-        if cell
-          [2, 3].includes?(num_neighbors)
-        else
-          num_neighbors == 3
-        end
+        live_or_die(row_i, col_i)
       end
     end
 
@@ -26,20 +20,25 @@ class Conway
       .join("\n")
   end
 
-  def live_neighbors(row, col)
-    row = row % board.size
-    col = col % board.size
+  def live_or_die(row, col)
+    wrap = ->(x : Int32) { x % board.size }
 
-    [
-      board.dig?(row, col + 1),
-      board.dig?(row, col - 1),
-      board.dig?(row + 1, col),
-      board.dig?(row - 1, col),
-      board.dig?(row + 1, col + 1),
-      board.dig?(row - 1, col - 1),
-      board.dig?(row + 1, col - 1),
-      board.dig?(row - 1, col + 1),
+    neighbors = [
+      board.dig?(wrap.call(row + 0), wrap.call(col + 1)),
+      board.dig?(wrap.call(row + 0), wrap.call(col - 1)),
+      board.dig?(wrap.call(row + 1), wrap.call(col + 0)),
+      board.dig?(wrap.call(row - 1), wrap.call(col + 0)),
+      board.dig?(wrap.call(row + 1), wrap.call(col + 1)),
+      board.dig?(wrap.call(row - 1), wrap.call(col - 1)),
+      board.dig?(wrap.call(row + 1), wrap.call(col - 1)),
+      board.dig?(wrap.call(row - 1), wrap.call(col + 1)),
     ].count { |x| x }
+
+    if board.dig?(row, col)
+      [2, 3].includes?(neighbors)
+    else
+      neighbors == 3
+    end
   end
 end
 

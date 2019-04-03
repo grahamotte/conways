@@ -17,14 +17,11 @@ const boardToString = board => {
 };
 
 const neighbors = (board, row, col) => {
-  row = row % board.length;
-  col = col % board.length;
-
   return [
-    boardDig(board, row, col + 1),
-    boardDig(board, row, col - 1),
-    boardDig(board, row + 1, col),
-    boardDig(board, row - 1, col),
+    boardDig(board, row + 0, col + 1),
+    boardDig(board, row + 0, col - 1),
+    boardDig(board, row + 1, col + 0),
+    boardDig(board, row - 1, col + 0),
     boardDig(board, row + 1, col + 1),
     boardDig(board, row - 1, col - 1),
     boardDig(board, row + 1, col - 1),
@@ -33,6 +30,9 @@ const neighbors = (board, row, col) => {
 };
 
 const boardDig = (board, row, col) => {
+  row = row % board.length;
+  col = col % board.length;
+
   try {
     return board[row][col];
   } catch {
