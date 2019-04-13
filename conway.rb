@@ -14,31 +14,26 @@ class Conway
   end
 
   def to_s
-    board
-      .map { |r| r.map { |c| c ? '#' : '.' }.join(' ') }
-      .join("\n")
+    board.map { |r| r.map { |c| c ? '#' : '.' }.join(' ') }.join("\n")
   end
 
   private
 
   def live_or_die(row, col)
-    wrap = ->(x) { x % @board.length }
-
-    neighbors = [
-      board.dig(wrap.call(row + 0), wrap.call(col + 1)),
-      board.dig(wrap.call(row + 0), wrap.call(col - 1)),
-      board.dig(wrap.call(row + 1), wrap.call(col + 0)),
-      board.dig(wrap.call(row - 1), wrap.call(col + 0)),
-      board.dig(wrap.call(row + 1), wrap.call(col + 1)),
-      board.dig(wrap.call(row - 1), wrap.call(col - 1)),
-      board.dig(wrap.call(row + 1), wrap.call(col - 1)),
-      board.dig(wrap.call(row - 1), wrap.call(col + 1)),
-    ].count { |x| x }
+    neighbor_count = 0
+    neighbor_count += board.dig(row + 0 % board.length, col + 1 % board.length) ? 1 : 0
+    neighbor_count += board.dig(row + 0 % board.length, col - 1 % board.length) ? 1 : 0
+    neighbor_count += board.dig(row + 1 % board.length, col + 0 % board.length) ? 1 : 0
+    neighbor_count += board.dig(row - 1 % board.length, col + 0 % board.length) ? 1 : 0
+    neighbor_count += board.dig(row + 1 % board.length, col + 1 % board.length) ? 1 : 0
+    neighbor_count += board.dig(row - 1 % board.length, col - 1 % board.length) ? 1 : 0
+    neighbor_count += board.dig(row + 1 % board.length, col - 1 % board.length) ? 1 : 0
+    neighbor_count += board.dig(row - 1 % board.length, col + 1 % board.length) ? 1 : 0
 
     if board.dig(row, col)
-      [2, 3].include?(neighbors)
+      [2, 3].include?(neighbor_count)
     else
-      neighbors == 3
+      neighbor_count == 3
     end
   end
 end
