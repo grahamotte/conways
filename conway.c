@@ -35,7 +35,6 @@ int mod(int a, int b) {
 }
 
 int liveOrDie(bool ** board, int size, int row, int col) {
-  int cell = board[row][col];
   int countNeighbors = 0;
 
   countNeighbors += (bool) board[mod(row + 0, size)][mod(col + 1, size)];
@@ -47,7 +46,7 @@ int liveOrDie(bool ** board, int size, int row, int col) {
   countNeighbors += (bool) board[mod(row + 1, size)][mod(col - 1, size)];
   countNeighbors += (bool) board[mod(row - 1, size)][mod(col + 1, size)];
 
-  if (cell) {
+  if (board[row][col]) {
     return countNeighbors == 2 || countNeighbors == 3;
   } else {
     return countNeighbors == 3;

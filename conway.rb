@@ -20,17 +20,18 @@ class Conway
   private
 
   def live_or_die(row, col)
-    neighbor_count = 0
-    neighbor_count += board.dig(row + 0 % board.length, col + 1 % board.length) ? 1 : 0
-    neighbor_count += board.dig(row + 0 % board.length, col - 1 % board.length) ? 1 : 0
-    neighbor_count += board.dig(row + 1 % board.length, col + 0 % board.length) ? 1 : 0
-    neighbor_count += board.dig(row - 1 % board.length, col + 0 % board.length) ? 1 : 0
-    neighbor_count += board.dig(row + 1 % board.length, col + 1 % board.length) ? 1 : 0
-    neighbor_count += board.dig(row - 1 % board.length, col - 1 % board.length) ? 1 : 0
-    neighbor_count += board.dig(row + 1 % board.length, col - 1 % board.length) ? 1 : 0
-    neighbor_count += board.dig(row - 1 % board.length, col + 1 % board.length) ? 1 : 0
+    neighbor_count = [
+      board[(row + 0) % board.length][(col + 1) % board.length],
+      board[(row + 0) % board.length][(col - 1) % board.length],
+      board[(row + 1) % board.length][(col + 0) % board.length],
+      board[(row - 1) % board.length][(col + 0) % board.length],
+      board[(row + 1) % board.length][(col + 1) % board.length],
+      board[(row - 1) % board.length][(col - 1) % board.length],
+      board[(row + 1) % board.length][(col - 1) % board.length],
+      board[(row - 1) % board.length][(col + 1) % board.length],
+    ].count { |x| x }
 
-    if board.dig(row, col)
+    if board[row][col]
       [2, 3].include?(neighbor_count)
     else
       neighbor_count == 3

@@ -15,31 +15,22 @@ class Conway:
         ]
 
     def live_or_die(self, row, col):
-        wrap = lambda x: x % len(self.board)
-
+        length = len(self.board)
         neighbors = [
-            self.dig(self.board, wrap(row + 0), wrap(col + 1)),
-            self.dig(self.board, wrap(row + 0), wrap(col - 1)),
-            self.dig(self.board, wrap(row + 1), wrap(col + 0)),
-            self.dig(self.board, wrap(row - 1), wrap(col + 0)),
-            self.dig(self.board, wrap(row + 1), wrap(col + 1)),
-            self.dig(self.board, wrap(row - 1), wrap(col - 1)),
-            self.dig(self.board, wrap(row + 1), wrap(col - 1)),
-            self.dig(self.board, wrap(row - 1), wrap(col + 1)),
+            self.board[(row + 0) % length][(col + 1) % length],
+            self.board[(row + 0) % length][(col - 1) % length],
+            self.board[(row + 1) % length][(col + 0) % length],
+            self.board[(row - 1) % length][(col + 0) % length],
+            self.board[(row + 1) % length][(col + 1) % length],
+            self.board[(row - 1) % length][(col - 1) % length],
+            self.board[(row + 1) % length][(col - 1) % length],
+            self.board[(row - 1) % length][(col + 1) % length],
         ].count(True)
 
-        if self.dig(self.board, row, col):
+        if self.board[row][col]:
             return neighbors == 2 or neighbors == 3
         else:
             return neighbors == 3
-
-    def dig(self, items, *indexes):
-        try:
-            for index in indexes:
-                items = items[index]
-            return items
-        except IndexError:
-            return False
 
     def __repr__(self):
         return "\n".join([

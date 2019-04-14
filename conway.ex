@@ -10,47 +10,41 @@ defmodule Conway do
   def tick(board) do
     board |> Enum.with_index |> Enum.map(fn row ->
       { row_values, row_index } = row
-
       row_values |> Enum.with_index |> Enum.map(fn col ->
         { cell, col_index } = col
-        num_neighbors = live_neighbors(board, row_index, col_index)
-
-        case cell do
-          true -> case num_neighbors do
-            2 -> true
-            3 -> true
-            _ -> false
-          end
-          false -> case num_neighbors do
-            3 -> true
-            _ -> false
-          end
-        end
+        live_or_die(board, row_index, col_index)
       end)
     end)
   end
 
-  defp live_neighbors(board, row, col) do
-    Enum.count([
-      dig_val(board, row + 0, col + 1),
-      dig_val(board, row + 0, col - 1),
-      dig_val(board, row + 1, col + 0),
-      dig_val(board, row - 1, col + 0),
-      dig_val(board, row + 1, col + 1),
-      dig_val(board, row - 1, col - 1),
-      dig_val(board, row + 1, col - 1),
-      dig_val(board, row - 1, col + 1),
-    ], &(&1))
+  defp mod(a, b) do
+    rem = rem(a, b)
+    if rem < 0, do: rem + b, else: rem
   end
 
-  defp dig_val(board, row, col) do
-    row = rem(row, length(board))
-    col = rem(col, length(board))
+  defp live_or_die(board, row, col) do
+    len = length(board)
+    neighbors = Enum.count([
+      board |> Enum.at(mod(row + 0, len)) |> Enum.at(mod(col + 1, len)),
+      board |> Enum.at(mod(row + 0, len)) |> Enum.at(mod(col - 1, len)),
+      board |> Enum.at(mod(row + 1, len)) |> Enum.at(mod(col + 0, len)),
+      board |> Enum.at(mod(row - 1, len)) |> Enum.at(mod(col + 0, len)),
+      board |> Enum.at(mod(row + 1, len)) |> Enum.at(mod(col + 1, len)),
+      board |> Enum.at(mod(row - 1, len)) |> Enum.at(mod(col - 1, len)),
+      board |> Enum.at(mod(row + 1, len)) |> Enum.at(mod(col - 1, len)),
+      board |> Enum.at(mod(row - 1, len)) |> Enum.at(mod(col + 1, len)),
+    ], &(&1))
 
-    try do
-      board |> Enum.at(row) |> Enum.at(col)
-    rescue
-      _ -> nil
+    case board |> Enum.at(row) |> Enum.at(col) do
+      true -> case neighbors do
+        2 -> true
+        3 -> true
+        _ -> false
+      end
+      false -> case neighbors do
+        3 -> true
+        _ -> false
+      end
     end
   end
 

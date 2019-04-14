@@ -21,23 +21,21 @@ class Conway
   end
 
   def live_or_die(row, col)
-    wrap = ->(x : Int32) { x % board.size }
-
-    neighbors = [
-      board.dig?(wrap.call(row + 0), wrap.call(col + 1)),
-      board.dig?(wrap.call(row + 0), wrap.call(col - 1)),
-      board.dig?(wrap.call(row + 1), wrap.call(col + 0)),
-      board.dig?(wrap.call(row - 1), wrap.call(col + 0)),
-      board.dig?(wrap.call(row + 1), wrap.call(col + 1)),
-      board.dig?(wrap.call(row - 1), wrap.call(col - 1)),
-      board.dig?(wrap.call(row + 1), wrap.call(col - 1)),
-      board.dig?(wrap.call(row - 1), wrap.call(col + 1)),
+    neighbor_count = [
+      board[(row + 0) % board.size][(col + 1) % board.size],
+      board[(row + 0) % board.size][(col - 1) % board.size],
+      board[(row + 1) % board.size][(col + 0) % board.size],
+      board[(row - 1) % board.size][(col + 0) % board.size],
+      board[(row + 1) % board.size][(col + 1) % board.size],
+      board[(row - 1) % board.size][(col - 1) % board.size],
+      board[(row + 1) % board.size][(col - 1) % board.size],
+      board[(row - 1) % board.size][(col + 1) % board.size],
     ].count { |x| x }
 
-    if board.dig?(row, col)
-      [2, 3].includes?(neighbors)
+    if board[row][col]
+      [2, 3].includes?(neighbor_count)
     else
-      neighbors == 3
+      neighbor_count == 3
     end
   end
 end

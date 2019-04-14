@@ -16,42 +16,34 @@ const boardToString = board => {
     .join("\n");
 };
 
-const neighbors = (board, row, col) => {
-  return [
-    boardDig(board, row + 0, col + 1),
-    boardDig(board, row + 0, col - 1),
-    boardDig(board, row + 1, col + 0),
-    boardDig(board, row - 1, col + 0),
-    boardDig(board, row + 1, col + 1),
-    boardDig(board, row - 1, col - 1),
-    boardDig(board, row + 1, col - 1),
-    boardDig(board, row - 1, col + 1)
+const liveOrDie = (board, row, col) => {
+  countNeighbors = [
+    board[mod(row + 0, board.length)][mod(col + 1, board.length)],
+    board[mod(row + 0, board.length)][mod(col - 1, board.length)],
+    board[mod(row + 1, board.length)][mod(col + 0, board.length)],
+    board[mod(row - 1, board.length)][mod(col + 0, board.length)],
+    board[mod(row + 1, board.length)][mod(col + 1, board.length)],
+    board[mod(row - 1, board.length)][mod(col - 1, board.length)],
+    board[mod(row + 1, board.length)][mod(col - 1, board.length)],
+    board[mod(row - 1, board.length)][mod(col + 1, board.length)]
   ].filter(x => x).length;
+
+  if (board[row][col]) {
+    return countNeighbors == 2 || countNeighbors == 3;
+  } else {
+    return countNeighbors == 3;
+  }
 };
 
-const boardDig = (board, row, col) => {
-  row = row % board.length;
-  col = col % board.length;
-
-  try {
-    return board[row][col];
-  } catch {
-    return false;
-  }
+const mod = (a, b) => {
+  const r = a % b;
+  return r < 0 ? r + b : r;
 };
 
 const tick = board => {
   return board.map((row, row_index) => {
     return row.map((cell, col_index) => {
-      count_neighbors = neighbors(board, row_index, col_index);
-
-      if (cell) {
-        return count_neighbors == 2 || count_neighbors == 3;
-      } else {
-        return count_neighbors == 3;
-      }
-
-      return false;
+      return liveOrDie(board, row_index, col_index);
     });
   });
 };
@@ -60,7 +52,7 @@ function sleep(ms, callback) {
   var start = new Date().getTime();
   var expire = start + ms;
 
-  while (new Date().getTime() < expire) {}
+  while (new Date().getTime() < expire) { }
 
   callback(ms);
 }
