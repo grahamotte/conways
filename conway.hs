@@ -1,6 +1,9 @@
-{- stack script --resolver lts-19.10 --package random -}
+{- stack script --resolver lts-19.10 -}
+
+-- stack conway.hs
 
 import System.Random
+import Control.Concurrent
 
 -- groupby :: Int -> [] ???
 groupby n arr = takeWhile (not . null) (map (take n) (iterate (drop n) arr))
@@ -18,7 +21,7 @@ renderline :: [Bool] -> String
 renderline = concatMap rendercell
 
 renderboard :: [[Bool]] -> String
-renderboard board = unlines (map renderline board)
+renderboard board = unlines (map renderline board) ++ "\n"
 
 liveordie :: [[Bool]] -> Int -> Int -> Bool
 liveordie board row col = do
@@ -43,13 +46,18 @@ liveordie board row col = do
 tick :: [[Bool]] -> [[Bool]]
 tick board = map (\r -> map (\c -> liveordie board r c) [0 .. length board - 1]) [0 .. length board - 1]
 
--- ???
+ticker boards 100 = return ()
+ticker boards n = do
+  threadDelay 100000
+  putStr $ renderboard (boards !! n)
+  ticker boards (n + 1)
+
+main :: IO ()
 main = do
   let seed = 123
   let size = 20
   let board = groupby size (map randBool [seed .. (seed - 1 + (size * size))])
-  let boards = map (iterate tick board !!) [0..20]
-  let renderedboards = map renderboard boards
+  let boards = iterate tick board
 
-  putStr $ unlines renderedboards
+  ticker boards 0
 
