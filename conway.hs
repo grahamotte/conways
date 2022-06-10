@@ -11,8 +11,8 @@ randBool aseed = fst (randomR (0, 1) (mkStdGen aseed) :: (Int, StdGen)) == 0
 rendercell :: Bool -> String
 rendercell cell =
   if cell
-    then "■ "
-    else "· "
+    then "# "
+    else ". "
 
 renderline :: [Bool] -> String
 renderline = concatMap rendercell

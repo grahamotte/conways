@@ -1,3 +1,5 @@
+# ruby conway.rb
+
 class Conway
   attr_accessor :board
 

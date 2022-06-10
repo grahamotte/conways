@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# bash conway.sh
 # Don't complain that the screwdriver sucks at driving a nail into the wall.
 
 export IFS=$'\n'
@@ -68,6 +69,6 @@ function tick {
 }
 
 for _ in {1..10}; do
-  tick
-  print_board
+    tick
+    print_board
 done

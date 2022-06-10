@@ -1,3 +1,5 @@
+# python conway.py
+
 import time
 import random
 

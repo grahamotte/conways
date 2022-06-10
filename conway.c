@@ -1,3 +1,5 @@
+// gcc -o conway conway.c && ./conway
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>

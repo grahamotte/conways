@@ -1,3 +1,5 @@
+# crystal conway.cr
+
 class Conway
   property board
 
