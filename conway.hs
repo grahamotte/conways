@@ -1,61 +1,55 @@
-{- stack script
- --resolver lts-19.10
- --package random
--}
+{- stack script --resolver lts-19.10 --package random -}
 
 import System.Random
 
-seed = 123
-
 -- groupby :: Int -> [] ???
-groupby n arr = takeWhile (not.null) (map (take n) (iterate (drop n) arr))
+groupby n arr = takeWhile (not . null) (map (take n) (iterate (drop n) arr))
 
--- ?
+-- ???
 randBool aseed = fst (randomR (0, 1) (mkStdGen aseed) :: (Int, StdGen)) == 0
 
 rendercell :: Bool -> String
-rendercell cell = if cell
-  then "#"
-  else " "
+rendercell cell =
+  if cell
+    then "■ "
+    else "· "
 
 renderline :: [Bool] -> String
 renderline = concatMap rendercell
 
 renderboard :: [[Bool]] -> String
-renderboard board = unlines $ map renderline board
+renderboard board = unlines (map renderline board)
 
 liveordie :: [[Bool]] -> Int -> Int -> Bool
 liveordie board row col = do
+  let len = length board - 1
   let cell = board !! row !! col
-  let be = board !! (row + 1) !! col
-  let ab = board !! (row - 1) !! col
-  let ri = board !! row !! (col + 1)
-  let le = board !! row !! (col - 1)
-  let tl = board !! (row - 1) !! (col - 1)
-  let tr = board !! (row - 1) !! (col + 1)
-  let bl = board !! (row + 1) !! (col - 1)
-  let br = board !! (row + 1) !! (col + 1)
+
+  let be = if row + 1 > len then False else board !! (row + 1) !! col
+  let ab = if row - 1 < 0 then False else board !! (row - 1) !! col
+  let ri = if col + 1 > len then False else board !! row !! (col + 1)
+  let le = if col - 1 < 0 then False else board !! row !! (col - 1)
+  let tl = if row - 1 < 0 || col - 1 < 0 then False else board !! (row - 1) !! (col - 1)
+  let tr = if row - 1 < 0 || col + 1 > len then False else board !! (row - 1) !! (col + 1)
+  let bl = if row + 1 > len || col - 1 < 0 then False else board !! (row + 1) !! (col - 1)
+  let br = if row + 1 > len || col + 1 > len then False else board !! (row + 1) !! (col + 1)
 
   let count = length (filter id [ri, tr, ab, tl, le, bl, be, br])
 
   if cell
     then count == 2 || count == 3
-  else count == 3
+    else count == 3
 
--- mapLine :: Int -> [Bool] -> [Bool]
--- mapLine row line = map (liveordie board row) (zip [0..] line)
+tick :: [[Bool]] -> [[Bool]]
+tick board = map (\r -> map (\c -> liveordie board r c) [0 .. length board - 1]) [0 .. length board - 1]
 
--- tick :: [[Bool]] -> [[Bool]]
--- tick board = map () (zip [0..] board)
-
--- ?
+-- ???
 main = do
-  let size = 10
-  let board = groupby size (map randBool [seed..(seed - 1 + (size * size))])
+  let seed = 123
+  let size = 20
+  let board = groupby size (map randBool [seed .. (seed - 1 + (size * size))])
+  let boards = map (iterate tick board !!) [0..20]
+  let renderedboards = map renderboard boards
 
-  print $ zip [0..] board
+  putStr $ unlines renderedboards
 
-  -- print $ liveordie board 1 1
-  -- -- renderboard (tick board 1 1)
-
-  -- putStr $ renderboard board
