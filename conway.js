@@ -1,14 +1,16 @@
-const range = n => {
+// node conway.js
+
+const range = (n) => {
   return [...Array(n).keys()];
 };
 
-const randRange = max => Math.floor(Math.random() * (max + 1));
+const randRange = (max) => Math.floor(Math.random() * (max + 1));
 
-const boardToString = board => {
+const boardToString = (board) => {
   return board
-    .map(row => {
+    .map((row) => {
       return row
-        .map(col => {
+        .map((col) => {
           return col ? "#" : ".";
         })
         .join(" ");
@@ -25,8 +27,8 @@ const liveOrDie = (board, row, col) => {
     board[mod(row + 1, board.length)][mod(col + 1, board.length)],
     board[mod(row - 1, board.length)][mod(col - 1, board.length)],
     board[mod(row + 1, board.length)][mod(col - 1, board.length)],
-    board[mod(row - 1, board.length)][mod(col + 1, board.length)]
-  ].filter(x => x).length;
+    board[mod(row - 1, board.length)][mod(col + 1, board.length)],
+  ].filter((x) => x).length;
 
   if (board[row][col]) {
     return countNeighbors == 2 || countNeighbors == 3;
@@ -40,7 +42,7 @@ const mod = (a, b) => {
   return r < 0 ? r + b : r;
 };
 
-const tick = board => {
+const tick = (board) => {
   return board.map((row, row_index) => {
     return row.map((cell, col_index) => {
       return liveOrDie(board, row_index, col_index);
@@ -52,15 +54,15 @@ function sleep(ms, callback) {
   var start = new Date().getTime();
   var expire = start + ms;
 
-  while (new Date().getTime() < expire) { }
+  while (new Date().getTime() < expire) {}
 
   callback(ms);
 }
 
 const size = 20;
 
-var board = range(size).map(row => {
-  return range(size).map(col => {
+var board = range(size).map((row) => {
+  return range(size).map((col) => {
     return randRange(1) == 1;
   });
 });
