@@ -39,7 +39,7 @@ end
 
 size = 50
 conway = Conway.new(size)
-
+start = Time.now
 print "\e[?25l"
 1000.times do
   print "\033[#{size}A"
@@ -47,4 +47,5 @@ print "\e[?25l"
   conway.tick
 end
 print "\e[?25h"
+puts Time.now - start
 
