@@ -31,7 +31,7 @@ class Conway
   def to_s
     board.map do |row|
       row.map do |col|
-        col ? '#' : '.'
+        col ? '●' : '·'
       end.join(' ')
     end.join("\n")
   end
@@ -40,8 +40,11 @@ end
 size = 50
 conway = Conway.new(size)
 
-100.times do
+print "\e[?25l"
+1000.times do
   print "\033[#{size}A"
   puts conway
   conway.tick
 end
+print "\e[?25h"
+
