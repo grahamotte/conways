@@ -1,4 +1,4 @@
-# ruby conway.rb
+# ruby conway2.rb
 
 class Board
   attr_accessor :data, :size

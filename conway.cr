@@ -13,7 +13,6 @@ class Conway
         live_or_die(row_i, col_i)
       end
     end
-
   end
 
   def to_s
