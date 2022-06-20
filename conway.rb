@@ -1,52 +1,50 @@
 # ruby conway.rb
 
 class Conway
-  attr_accessor :board
+  attr_accessor :board, :size
 
   def initialize(size)
-    @board = Array.new(size) { Array.new(size) { rand(0..1) == 1 } }
+    @size = size
+    @board = (0..(size - 1)).map { (0..(size - 1)).map { [true, false].sample } }
   end
 
   def tick
-    @board = board.map.with_index do |row, row_i|
-      row.map.with_index do |_, col_i|
-        live_or_die(row_i, col_i)
+    @board = begin
+      board.map.with_index do |row, r|
+        row.map.with_index do |col, c|
+          count = 0
+          count += 1 if board[(r + 0) % size][(c + 1) % size]
+          count += 1 if board[(r + 0) % size][(c - 1) % size]
+          count += 1 if board[(r + 1) % size][(c + 0) % size]
+          count += 1 if board[(r - 1) % size][(c + 0) % size]
+          count += 1 if board[(r + 1) % size][(c + 1) % size]
+          count += 1 if board[(r - 1) % size][(c - 1) % size]
+          count += 1 if board[(r + 1) % size][(c - 1) % size]
+          count += 1 if board[(r - 1) % size][(c + 1) % size]
+
+          count == 3 || (col && count == 2)
+        end
       end
     end
   end
 
   def to_s
-    board.map { |r| r.map { |c| c ? '#' : '.' }.join(' ') }.join("\n")
-  end
-
-  private
-
-  def live_or_die(row, col)
-    neighbor_count = [
-      board[(row + 0) % board.length][(col + 1) % board.length],
-      board[(row + 0) % board.length][(col - 1) % board.length],
-      board[(row + 1) % board.length][(col + 0) % board.length],
-      board[(row - 1) % board.length][(col + 0) % board.length],
-      board[(row + 1) % board.length][(col + 1) % board.length],
-      board[(row - 1) % board.length][(col - 1) % board.length],
-      board[(row + 1) % board.length][(col - 1) % board.length],
-      board[(row - 1) % board.length][(col + 1) % board.length],
-    ].count { |x| x }
-
-    if board[row][col]
-      [2, 3].include?(neighbor_count)
-    else
-      neighbor_count == 3
-    end
+    board.map do |row|
+      row.map do |col|
+        col ? '●' : '·'
+      end.join(' ')
+    end.join("\n")
   end
 end
 
-conway = Conway.new(20)
+size = 50
+conway = Conway.new(size)
 
-100.times do
+print "\e[?25l"
+1000.times do
+  print "\033[#{size}A"
   puts conway
-  puts
-
   conway.tick
-  sleep 0.1
 end
+print "\e[?25h"
+
