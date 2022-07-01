@@ -6,3 +6,6 @@ nodejs 16.15.1
 python 3.10.0
 ruby 3.0.0
 rust 1.61.0
+racket 8.5
+
+# asdf plugin-add racket https://github.com/vic/asdf-racket.git
