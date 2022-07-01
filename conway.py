@@ -5,6 +5,7 @@ import random
 
 class Conway:
     def __init__(self, size):
+        self.size = size
         self.board = [
             [random.choice([True, False]) for x in range(size)]
             for x in range(size)
@@ -17,35 +18,35 @@ class Conway:
         ]
 
     def live_or_die(self, row, col):
-        length = len(self.board)
-        neighbors = [
-            self.board[(row + 0) % length][(col + 1) % length],
-            self.board[(row + 0) % length][(col - 1) % length],
-            self.board[(row + 1) % length][(col + 0) % length],
-            self.board[(row - 1) % length][(col + 0) % length],
-            self.board[(row + 1) % length][(col + 1) % length],
-            self.board[(row - 1) % length][(col - 1) % length],
-            self.board[(row + 1) % length][(col - 1) % length],
-            self.board[(row - 1) % length][(col + 1) % length],
-        ].count(True)
+        count = 0
+        if self.board[(row + 0) % self.size][(col + 1) % self.size]: count += 1
+        if self.board[(row + 0) % self.size][(col - 1) % self.size]: count += 1
+        if self.board[(row + 1) % self.size][(col + 0) % self.size]: count += 1
+        if self.board[(row - 1) % self.size][(col + 0) % self.size]: count += 1
+        if self.board[(row + 1) % self.size][(col + 1) % self.size]: count += 1
+        if self.board[(row - 1) % self.size][(col - 1) % self.size]: count += 1
+        if self.board[(row + 1) % self.size][(col - 1) % self.size]: count += 1
+        if self.board[(row - 1) % self.size][(col + 1) % self.size]: count += 1
 
         if self.board[row][col]:
-            return neighbors == 2 or neighbors == 3
+            return count == 2 or count == 3
         else:
-            return neighbors == 3
+            return count == 3
 
-    def __repr__(self):
+    def to_s(self):
         return "\n".join([
             ' '.join([
-                '#' if cell else '.' for cell in row
+                '●' if cell else '·' for cell in row
             ]) for row in self.board
         ])
 
-conway = Conway(20)
+size = 50
+conway = Conway(size)
+start = time.time()
 
-for _ in range(100):
-    print(conway)
-    print('')
-
+for _ in range(1000):
+    print(f"\033[{size + 1}A\r")
+    print(conway.to_s())
     conway.tick()
-    time.sleep(0.1)
+
+print(time.time() - start)
