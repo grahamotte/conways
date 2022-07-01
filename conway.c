@@ -21,14 +21,13 @@ void printBoard(bool ** board, int size) {
   for (int r = 0; r < size; r++) {
     for (int c = 0; c < size; c++) {
       if(board[r][c]) {
-        printf("# ");
+        printf("● ");
       } else {
-        printf(". ");
+        printf("· ");
       }
     }
     printf("\n");
   }
-  printf("\n");
 }
 
 int mod(int a, int b) {
@@ -76,7 +75,9 @@ void sleep_ms(int ms)
 }
 
 int main() {
-  int size = 20;
+  time_t start;
+  time_t end;
+  int size = 50;
 
   bool ** board = newBoard(size);
 
@@ -86,10 +87,25 @@ int main() {
     }
   }
 
-  for (int i = 0; i < 100; i++) {
+  // printf("\e[?25l");
+  // fflush(stdout);
+
+  time(&start);
+  for (int i = 0; i < 1000; i++) {
+    if (i != 0) {
+      printf("\033[%dA\r", size);
+      fflush(stdout);
+    }
+
     printBoard(board, size);
-    board = tick(board, size);
     fflush(stdout);
-    sleep_ms(100);
+
+    board = tick(board, size);
   }
+  time(&end);
+
+  printf("\n %f", difftime(end, start));
+
+  // printf("\e[?25l");
+  // fflush(stdout);
 }
